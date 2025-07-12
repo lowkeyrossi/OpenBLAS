@@ -80,3 +80,11 @@ jobs:
         run: |
           Get-ChildItem -Recurse -Path "C:\opt"
 
+      - name: Run tests with OpenBLAS DLL in PATH
+        shell: pwsh
+        run: |
+          $env:PATH = "C:\opt\bin;$env:PATH"
+          cd build
+          ctest --verbose
+
+
