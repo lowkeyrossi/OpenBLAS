@@ -42,6 +42,9 @@ jobs:
           # Prepend to PATH
           $currentPath = Get-Content -Path $env:GITHUB_PATH -ErrorAction SilentlyContinue
           "$cmakePath" + "`n" + ($currentPath -join "`n") | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+          Invoke-WebRequest https://github.com/ninja-build/ninja/releases/download/v1.13.1/ninja-winarm64.zip -OutFile ninja-winarm64.zip
+          Expand-Archive ninja-winarm64.zip -DestinationPath ninja
+          Copy-Item -Path ninja\ninja.exe -Destination "C:\Windows\System32"
 
       - name: Configure OpenBLAS
         shell: pwsh
