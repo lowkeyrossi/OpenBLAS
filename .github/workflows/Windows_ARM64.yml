@@ -49,16 +49,13 @@ jobs:
       - name: Configure OpenBLAS
         shell: cmd
         run: |
-          CALL "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsarm64.bat" &&
-          mkdir build &&
-          cd build &&
+          CALL "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsarm64.bat"
+          mkdir build
+          cd build
           cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release -DTARGET=ARMV8 -DBINARY=64 -DCMAKE_C_COMPILER=clang-cl -DCMAKE_Fortran_COMPILER=flang-new -DBUILD_SHARED_LIBS=ON
-      
-      - name: Build OpenBLAS 
+
+      - name: Build OpenBLAS
         shell: cmd
         run: |
-          cd build &&
+          cd build
           ninja -j16
-
-    
-      
