@@ -40,9 +40,13 @@ jobs:
       - name: Install CMake for Win-ARM64
         shell: pwsh
         run: |
-          Invoke-WebRequest https://github.com/Kitware/CMake/releases/download/v3.29.4/cmake-3.29.4-windows-arm64.msi -UseBasicParsing -OutFile "cmake-arm64.msi"
+          $cmakeInstallerUrl = "https://github.com/Kitware/CMake/releases/download/v3.29.4/cmake-3.29.4-windows-arm64.msi"
+          Invoke-WebRequest $cmakeInstallerUrl -UseBasicParsing -OutFile "cmake-arm64.msi"
           Start-Process msiexec.exe -ArgumentList "/i cmake-arm64.msi /quiet /norestart" -Wait
-          echo C:\Program Files\CMake\bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          $cmakePath = "C:\Program Files\CMake\bin"
+          # Prepend to PATH
+          $currentPath = Get-Content -Path $env:GITHUB_PATH -ErrorAction SilentlyContinue
+          "$cmakePath" + "`n" + ($currentPath -join "`n") | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
 
       - name: Configure OpenBLAS
         run: |
