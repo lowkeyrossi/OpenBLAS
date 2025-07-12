@@ -38,9 +38,11 @@ jobs:
           echo "C:\Program Files\LLVM\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Install CMake for Win-ARM64
-        uses: lukka/get-cmake@v3
-        with:
-          architecture: arm64
+        shell: pwsh
+        run: |
+          Invoke-WebRequest https://github.com/Kitware/CMake/releases/download/v3.29.4/cmake-3.29.4-windows-arm64.msi -UseBasicParsing -OutFile "cmake-arm64.msi"
+          Start-Process msiexec.exe -ArgumentList "/i cmake-arm64.msi /quiet /norestart" -Wait
+          echo C:\Program Files\CMake\bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Configure OpenBLAS
         run: |
