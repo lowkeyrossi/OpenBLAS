@@ -52,7 +52,7 @@ jobs:
           CALL "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsarm64.bat"
           mkdir build
           cd build
-          cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release -DTARGET=ARMV8 -DBINARY=64 -DCMAKE_C_COMPILER=clang-cl -DCMAKE_Fortran_COMPILER=flang-new -DBUILD_SHARED_LIBS=ON
+          cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release -DTARGET=ARMV8 -DBINARY=64 -DCMAKE_C_COMPILER=clang-cl -DCMAKE_Fortran_COMPILER=flang-new -DBUILD_SHARED_LIBS=ON -DCMAKE_SYSTEM_PROCESSOR=arm64 -DCMAKE_SYSTEM_NAME=Windows
 
       - name: Build OpenBLAS
         shell: cmd
