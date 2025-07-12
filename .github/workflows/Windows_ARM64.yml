@@ -1,0 +1,55 @@
+name: Windows ARM64 CI
+
+on:
+  push:
+    branches:
+      - WoA_CI
+      - release-**
+  pull_request:
+    branches:
+      - develop
+      - release-**
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read # to fetch code (actions/checkout)
+
+jobs:
+  build:
+    if: "github.repository == 'OpenMathLib/OpenBLAS'"
+    runs-on: windows-11-arm
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup MSVC for Win-ARM64
+        uses: bus1/cabuild/action/msdevshell@e22aba57d6e74891d059d66501b6b5aed8123c4d  # v1
+        with:
+          architecture: arm64
+
+      - name: Install LLVM for Win-ARM64
+        shell: pwsh
+        run: |
+          Invoke-WebRequest https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.6/LLVM-20.1.6-woa64.exe -UseBasicParsing -OutFile LLVM-woa64.exe
+          Start-Process -FilePath ".\LLVM-woa64.exe" -ArgumentList "/S" -Wait
+          echo "C:\Program Files\LLVM\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Install CMake for Win-ARM64
+        uses: lukka/get-cmake@v3
+        with:
+          architecture: arm64
+
+      - name: Configure OpenBLAS
+        run: |
+          mkdir build && cd build
+          cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release -DTARGET=ARMV8 -DBINARY=64 -DCMAKE_C_COMPILER=clang-cl -DCMAKE_Fortran_COMPILER=flang-new -DBUILD_SHARED_LIBS=ON
+
+      - name: Build OpenBLAS 
+        run: |
+          ninja -j16
+
+    
+      
