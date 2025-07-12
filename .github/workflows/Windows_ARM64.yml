@@ -48,6 +48,10 @@ jobs:
           $currentPath = Get-Content -Path $env:GITHUB_PATH -ErrorAction SilentlyContinue
           "$cmakePath" + "`n" + ($currentPath -join "`n") | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
 
+      - name: Show environment setup
+        run: |
+          cl.exe
+
       - name: Configure OpenBLAS
         run: |
           mkdir build && cd build
